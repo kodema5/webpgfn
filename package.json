@@ -1,0 +1,15 @@
+{
+  "name": "webpgfn",
+  "version": "0.0.1",
+  "description": "web-access to pg json-in json-out function",
+  "main": "webpgfn.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.20.0",
+    "pg": "^7.9.0"
+  }
+}
