@@ -1,41 +1,45 @@
-# webpgfn
+# webpgfn, web-api with pg functions
 
-web-access to pg json-in json-out function
+what if web-api in "awesome" pg' .sql(s)?
+
+pg has jsonb.
+webpgfn is an express-based web-api,
+it routes /schema.function to pg-query select schema.function(body/query)
+that returns a jsonb.
+for example: `http://localhost:3000/foo.bar?a=1`, queries `select foo.bar('{"a":1}'::jsonb)` and returns jsonb response.
+
+
+pg lacks async.
+to compose response from other services (pg-functions, etc);
+webpgfn checks a tagged exception, `callback: [{job},..]`.
+for example, foo.bar raises an exception to call foo.baz next
+```
+b = jsonb_build_array(json_build_object(
+    'url', 'pg://foo.baz',
+    'ctx', x || jsonb_build_object('bar', a + 100)));
+raise exception 'callback: %', b::text;
+```
 
 ## install
+
+setup pg
 ```
-    > npm install -g .
-    > webpgfn
-    listening on 3000
+set PGPASSWORD=rei
+docker run --rm -d -p 5432:5432 -v %cd%:/work --name pg1 -e POSTGRES_PASSWORD=%PGPASSWORD% postgres
+docker exec -it pg1 psql -U postgres -d postgres -f /work/example.sql
+rem docker stop pg1
 ```
 
-## examples
-
-sql:
-
+build
 ```
-    > drop schema if exists foo cascade;
-    > create schema foo;
-    > create function foo.bar(a jsonb) returns jsonb as $$
-    > begin
-    >   return a;
-    > end;
-    > $$ language plpgsql;
-    > select foo.bar('{"a":123}'::jsonb) as data;
+npm install
+npm start
 ```
-js:
 
-```
-    (async() => {
-        let res = await fetch('/foo.bar', {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({a: 1, b: 'Textual content'})
-        })
+then `http://localhost:3000/example.html`
 
-        console.log('---', await res.json())
-    })();
-```
+
+## finally
+
+webpgfn is a simple PoC to author web-api' app-logic in pg stored functions. other callbacks (ex: node-fetch for http/https) are to be customized as needed.
+

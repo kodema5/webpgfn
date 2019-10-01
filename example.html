@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>webpgfn-examples</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<button onClick="(async () => {
+    let r = await fetch('/foo.bar?a=1')
+    let a = await r.json()
+    let e = document.getElementById('foo.bar')
+    e.innerHTML = 'result:' + JSON.stringify(a)
+})()">call foo.bar({a:1}) - GET</button>
+<label id="foo.bar"></label>
+
+<hr/>
+
+<button onClick="(async () => {
+    let r = await fetch('/foo.bar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({a:2})
+    })
+    let a = await r.json()
+    let e = document.getElementById('foo.bar2')
+    e.innerHTML = 'result:' + JSON.stringify(a)
+})()">call foo.bar({a:2}) - POST json</button>
+
+<label id="foo.bar2"></label>
+
+</body>
+</html>
