@@ -14,6 +14,7 @@ module.exports = {
     },
     target: 'node',
     plugins: [
-        new webpack.IgnorePlugin(/^pg-native$/)
+        new webpack.IgnorePlugin(/^pg-native$/),
+        new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
     ]
 }
