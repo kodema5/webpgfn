@@ -27,4 +27,3 @@ begin
     return c;
 end;
 $$ language plpgsql;
-

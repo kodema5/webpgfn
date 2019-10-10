@@ -10,7 +10,7 @@
 
 <body>
 <button onClick="(async () => {
-    let r = await fetch('/foo.bar?a=1')
+    let r = await fetch('/api/foo.bar?a=1')
     let a = await r.json()
     let e = document.getElementById('foo.bar')
     e.innerHTML = 'result:' + JSON.stringify(a)
@@ -20,7 +20,7 @@
 <hr/>
 
 <button onClick="(async () => {
-    let r = await fetch('/foo.bar', {
+    let r = await fetch('/api/foo.bar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({a:2})

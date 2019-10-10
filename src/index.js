@@ -6,7 +6,7 @@ process_set({
     pg:process_pg(Args)
 })
 
-const process = async (url, ctx) => {
+const process_req = async (url, ctx) => {
     var jobs = [{ url:new URL(url) }]
 
     let res
@@ -32,24 +32,36 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(express.static('.'))
+app.use(express.static(Args.static))
 
-app.post('/:fn', async (req,res) => {
+app.post(`${Args.api}/:fn`, async (req,res) => {
     try {
         let u = `pg://${req.params.fn}`
-        let a = await process(u, req.body)
+        let a = await process_req(u, req.body)
         res.json(a)
     } catch(e) {
         res.json({error:e.toString()})
     }
 })
-app.get('/:fn', async (req,res) => {
+app.get(`${Args.api}/:fn`, async (req,res) => {
     try {
         let u = `pg://${req.params.fn}`
-        let a = await process(u, req.query)
+        let a = await process_req(u, req.query)
         res.json(a)
     } catch(e) {
         res.json({error:e.toString()})
     }
 })
+
+if (Args.proxy) {
+    const path = require('path')
+    const fs = require('fs')
+    const getPath = p => path.resolve(fs.realpathSync(process.cwd()), p)
+    const setupProxy = getPath(Args.proxy)
+    let f = fs.existsSync(setupProxy)
+    if (f) {
+        __non_webpack_require__(setupProxy)(app)
+    }
+}
+
 app.listen(Args.listen, () => console.log(`webpgfn listening on port ${Args.listen}`))

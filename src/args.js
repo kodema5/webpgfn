@@ -1,12 +1,11 @@
 const Args = require('commander')
 Args
     .version('0.0.1', '-v, --version')
-    .option('-h, --host [host]', 'pg host', 'localhost')
-    .option('-u, --user [usr]', 'pg user', 'postgres')
-    .option('-P, --password [pwd]', 'pg password', 'rei')
-    .option('-d, --database [db]', 'pg database', 'postgres')
-    .option('-p, --port [port]', 'pg port', 5432)
-    .option('-l, --listen [port]', 'server port', 3000)
+    .option('-a, --api [api]', 'web-api path', '/api')
+    .option('-s, --static [static]', 'static folder', './build')
+    .option('-l, --listen [port]', 'server port', 3001)
+    .option('-p, --pg [pg]', 'pg connection-string', 'postgresql://postgres:rei@localhost:5432/postgres')
+    .option('-x, --proxy [proxy]', 'setup proxy', 'setupProxy.js')
     .parse(process.argv)
 
 export default Args
