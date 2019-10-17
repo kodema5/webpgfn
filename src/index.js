@@ -1,67 +1,21 @@
-import Args from './args'
-import process_pg from './process_pg'
-import {process_set, process_seq} from './process'
+#!/usr/bin/env node
 
-process_set({
-    pg:process_pg(Args)
-})
+const Args = require('./Args')
+const server = require('./server')
 
-const process_req = async (url, ctx) => {
-    var jobs = [{ url:new URL(url) }]
+if (Args.watch) {
+    let args = Args.watch
+    console.log('[NODEMON]', args)
 
-    let res
-    while (jobs.length>0) {
-        try {
-            res = await process_seq(jobs, ctx)
-            jobs.length = 0
-        }
-        catch(e) {
-            let s = e.toString()
-            let c = 'error: callback:'
-            let f = s.indexOf(c)===0
-            if (!f) throw e
-
-            let a = s.slice(c.length).trim()
-            jobs = JSON.parse(a)
-        }
-    }
-    return res
+    const nodemon = require('nodemon')
+    nodemon(args)
+    .on('start', () => {
+        console.log('\n')
+    })
+    .on('restart', (files) => {
+        console.log('[NODEMON] restarted.', files)
+    })
 }
 
-const express = require('express')
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-app.use(express.static(Args.static))
+server(Args)
 
-app.post(`${Args.api}/:fn`, async (req,res) => {
-    try {
-        let u = `pg://${req.params.fn}`
-        let a = await process_req(u, req.body)
-        res.json(a)
-    } catch(e) {
-        res.json({error:e.toString()})
-    }
-})
-app.get(`${Args.api}/:fn`, async (req,res) => {
-    try {
-        let u = `pg://${req.params.fn}`
-        let a = await process_req(u, req.query)
-        res.json(a)
-    } catch(e) {
-        res.json({error:e.toString()})
-    }
-})
-
-if (Args.proxy) {
-    const path = require('path')
-    const fs = require('fs')
-    const getPath = p => path.resolve(fs.realpathSync(process.cwd()), p)
-    const setupProxy = getPath(Args.proxy)
-    let f = fs.existsSync(setupProxy)
-    if (f) {
-        __non_webpack_require__(setupProxy)(app)
-    }
-}
-
-app.listen(Args.listen, () => console.log(`webpgfn listening on port ${Args.listen}`))

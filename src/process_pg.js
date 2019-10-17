@@ -39,4 +39,4 @@ const process_pg = (Args) => {
     }
 }
 
-export default process_pg
+module.exports = process_pg

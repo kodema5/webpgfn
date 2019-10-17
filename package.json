@@ -1,29 +1,23 @@
 {
   "name": "webpgfn",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "web-access to pg json-in json-out function",
-  "main": "webpgfn.js",
+  "main": "./src/index.js",
   "bin": {
-    "webpgfn": "webpgfn.js"
+    "webpgfn": "./src/index.js"
   },
-  "author": "",
+  "author": "kodema5",
   "license": "MIT",
   "dependencies": {
     "commander": "^3.0.2",
     "express": "^4.17.1",
     "http-proxy-middleware": "^0.20.0",
     "node-fetch": "^2.6.0",
-    "pg": "^7.12.1"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.2",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9"
+    "pg": "^7.12.1",
+    "nodemon": "^1.19.2"
   },
   "scripts": {
-    "build": "npm install && webpack",
-    "start": "webpack && node webpgfn.js",
-    "dev": "nodemon -w src --exec npm run start",
-    "example": "nodemon -e sql -w example --exec psql -U postgres -d postgres -f example/sql/index.sql"
+    "start": "node src/webpgfn.js",
+    "dev": "nodemon -w src --exec npm run start"
   }
 }

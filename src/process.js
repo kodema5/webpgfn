@@ -103,4 +103,4 @@ const process_par = async (jobs={}, ctx=null) => {
     }, {})
 }
 
-export { protocols, process_set, process_job, process_seq, process_par }
+module.exports = { protocols, process_set, process_job, process_seq, process_par }
