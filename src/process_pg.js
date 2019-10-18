@@ -34,6 +34,8 @@ const process_pg = (Args) => {
             : ''
         }) as data;`
 
+        console.log('[WEBPGFN-PG]', sql)
+
         let rs = await pool.query(sql)
         return rs.rows[0]
     }
