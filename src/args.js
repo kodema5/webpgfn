@@ -5,7 +5,7 @@ Args
     .option('-s, --static [static]', 'static folder', './build')
     .option('-l, --listen [port]', 'server port', 3001)
     .option('-p, --pg [pg]', 'pg connection-string', 'postgresql://postgres:rei@localhost:5432/postgres')
-    .option('-x, --proxy [proxy]', 'setup http proxy', 'setupProxy.js')
+    .option('-x, --proxy [proxy]', 'setup http proxy ex: "setupProxy.js"')
     .option('-w, --watch <nodemon>', 'watch with nodemon ex: "-e sql --exec psql -U postgres -d postgres -f index.sql"')
     .parse(process.argv)
 
