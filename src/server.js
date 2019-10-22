@@ -1,8 +1,10 @@
 const process_pg = require('./process_pg')
-const {process_set, process_seq} = require('./process')
+const Protocols = require('./protocols')
+
+const protocols = new Protocols()
 
 function server (Args) {
-    process_set({
+    protocols.use({
         pg:process_pg(Args)
     })
 
@@ -12,7 +14,7 @@ function server (Args) {
         let res
         while (jobs.length>0) {
             try {
-                res = await process_seq(jobs, ctx)
+                res = await protocols.iter(jobs, ctx)
                 jobs.length = 0
             }
             catch(e) {
@@ -37,7 +39,8 @@ function server (Args) {
     app.post(`${Args.api}/:fn`, async (req,res) => {
         try {
             let u = `pg://${req.params.fn}`
-            let a = await process_req(u, req.body)
+            let p = {...req.body, headers:req.headers}
+            let a = await process_req(u, p)
             res.json(a)
         } catch(e) {
             res.json({error:e.toString()})
@@ -46,7 +49,8 @@ function server (Args) {
     app.get(`${Args.api}/:fn`, async (req,res) => {
         try {
             let u = `pg://${req.params.fn}`
-            let a = await process_req(u, req.query)
+            let p = {...req.query, headers:req.headers}
+            let a = await process_req(u, p)
             res.json(a)
         } catch(e) {
             res.json({error:e.toString()})
@@ -61,7 +65,7 @@ function server (Args) {
         let f = fs.existsSync(setupProxy)
         if (f) {
             // __non_webpack_require__(setupProxy)(app)
-            require(setupProxy)(app)
+            require(setupProxy)(app, protocols)
         }
     }
 

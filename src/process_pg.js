@@ -20,23 +20,29 @@ const process_pg = (Args) => {
 
     return async ({
         url,
-        ctx:_ctx={} // extra ctx
-    }, ctx) => {
+        ctx={} // extra ctx
+    }, req={}) => {
 
         let fn = url.hostname
         if (!fn) throw 'Error: function required'
 
-        const arg = Object.assign({}, ctx, _ctx)
+        const arg = Object.assign({}, req, ctx)
 
         const sql = `select ${fn}(${
-            ctx
+            arg
             ? "'" + JSON.stringify(arg) + "'::jsonb"
             : ''
         }) as data;`
 
-        console.log('[WEBPGFN-PG]', sql)
+        console.log('[WEBPGFN-PG]', `select ${fn}(...);`)
 
-        let rs = await pool.query(sql)
+        let client = await pool.connect()
+        client.on('notice', (msg) => {
+            console.log(`[WEBPGFN-PG ${fn}]`, msg.toString(), '\n')
+        })
+        let rs = await client.query(sql)
+        client.release()
+
         return rs.rows[0]
     }
 }

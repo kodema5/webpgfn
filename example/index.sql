@@ -6,6 +6,9 @@ declare
     a int;
     b jsonb;
 begin
+
+    raise notice '--%', x;
+
     a = (x->>'a')::int;
 
     -- creates a sequnce of jobs by throwing exception
