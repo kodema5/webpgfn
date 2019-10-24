@@ -24,7 +24,7 @@ const process_pg = (Args) => {
     }, req={}) => {
 
         let fn = url.hostname
-        if (!fn) throw 'Error: function required'
+        if (!fn) throw 'function required'
 
         const arg = Object.assign({}, req, ctx)
 
@@ -42,7 +42,12 @@ const process_pg = (Args) => {
         })
         try {
             let rs = await client.query(sql)
-            return rs.rows[0]
+
+            let a = rs.rows[0]
+            if (typeof (a||{}).data !== 'object') {
+                throw 'invalid function'
+            }
+            return a
         }
         catch(e) {
             throw e
