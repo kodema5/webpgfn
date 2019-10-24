@@ -40,10 +40,18 @@ const process_pg = (Args) => {
         client.on('notice', (msg) => {
             console.log(`[WEBPGFN-PG ${fn}]`, msg.toString(), '\n')
         })
-        let rs = await client.query(sql)
-        client.release()
+        try {
+            let rs = await client.query(sql)
+            return rs.rows[0]
+        }
+        catch(e) {
+            throw e
+        }
+        finally {
+            client.removeAllListeners('notice')
+            client.release()
+        }
 
-        return rs.rows[0]
     }
 }
 

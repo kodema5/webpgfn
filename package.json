@@ -1,6 +1,6 @@
 {
   "name": "webpgfn",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "web-access to pg json-in json-out function",
   "main": "./src/index.js",
   "bin": {
