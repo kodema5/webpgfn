@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const Args = require('./Args')
+const Args = require('./args')
 const server = require('./server')
 
 if (Args.watch) {
