@@ -23,10 +23,16 @@ $$ language plpgsql;
 create function foo.baz(x jsonb) returns jsonb as $$
 declare
     a int;
+    b jsonb;
     c jsonb;
 begin
     a  = (x->>'bar')::int;
-    c = x || jsonb_build_object('baz', a + 200);
+    c = jsonb_build_object(
+        'referer', x->'headers'->'referer',
+        'a', x->'a',
+        'bar', x->'bar',
+        'baz', a + 200);
+
     return c;
 end;
 $$ language plpgsql;

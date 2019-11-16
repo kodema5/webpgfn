@@ -1,6 +1,6 @@
 {
   "name": "webpgfn",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "web-access to pg json-in json-out function",
   "main": "./src/index.js",
   "bin": {
@@ -11,10 +11,11 @@
   "dependencies": {
     "commander": "^3.0.2",
     "express": "^4.17.1",
+    "express-fileupload": "^1.1.6-alpha.6",
     "http-proxy-middleware": "^0.20.0",
     "node-fetch": "^2.6.0",
-    "pg": "^7.12.1",
-    "nodemon": "^1.19.2"
+    "nodemon": "^1.19.2",
+    "pg": "^7.12.1"
   },
   "scripts": {
     "start": "node src/index.js",

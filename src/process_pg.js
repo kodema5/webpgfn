@@ -21,12 +21,12 @@ const process_pg = (Args) => {
     return async ({
         url,
         ctx={} // extra ctx
-    }, req={}) => {
+    }, params={}) => {
 
         let fn = url.hostname
         if (!fn) throw 'function required'
 
-        const arg = Object.assign({}, req, ctx)
+        const arg = Object.assign({}, params, ctx)
 
         const sql = `select ${fn}(${
             arg
