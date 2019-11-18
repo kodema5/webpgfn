@@ -26,19 +26,40 @@ function server (Args) {
     app.get(`${Args.api}/:fn`, fn)
 
     if (Args.proxy) {
-        const path = require('path')
-        const fs = require('fs')
-        const getPath = p => path.resolve(fs.realpathSync(process.cwd()), p)
-        const setupProxy = getPath(Args.proxy)
-        let f = fs.existsSync(setupProxy)
-        if (f) {
+        const setupProxy = resolvePath(Args.proxy)
+        if (setupProxy) {
             // __non_webpack_require__(setupProxy)(app)
             require(setupProxy)({app, protocols, pgFn} )
         }
     }
 
-    app.listen(Args.listen, () => console.log(`[WEBPGFN] listening on port ${Args.listen}`))
+    const sslKey = resolvePath(Args.sslKey)
+    const sslCert = resolvePath(Args.sslCert)
+    if (sslKey && sslCert && Args.sslPwd) {
+        console.log(`[WEBPGFN] https on port ${Args.listen}`)
+
+        const https = require('https')
+        https.createServer({
+            key: fs.readFileSync(sslKey),
+            cert: fs.readFileSync(sslCert),
+            passphrase: Args.sslPwd
+        }, app)
+        .listen(Args.listen)
+    }
+    else {
+        app.listen(Args.listen,
+            () => console.log(`[WEBPGFN] http on port ${Args.listen}`))
+    }
 }
+
+const path = require('path')
+const fs = require('fs')
+const getPath = p => path.resolve(fs.realpathSync(process.cwd()), p)
+const resolvePath = (p) => {
+    const n = getPath(p)
+    return fs.existsSync(n) && n
+}
+
 
 module.exports = server
 
@@ -65,3 +86,4 @@ const pgFn = async (fn, req, res) => {
     }
     return out
 }
+
