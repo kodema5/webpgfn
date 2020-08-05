@@ -11,7 +11,7 @@
   "dependencies": {
     "commander": "^3.0.2",
     "express": "^4.17.1",
-    "express-fileupload": "^1.1.6-alpha.6",
+    "express-fileupload": "^1.1.9",
     "http-proxy-middleware": "^0.20.0",
     "node-fetch": "^2.6.0",
     "nodemon": "^1.19.2",
